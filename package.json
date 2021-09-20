@@ -1,0 +1,16 @@
+{
+  "name": "projec-hamster",
+  "version": "1.0.0",
+  "description": "Create an app that shows whitch hamster won more votes for cuteness in 1v1 clashses",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "typescript": "^4.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start-server": "node src/server.js"
+  },
+  "author": "Boris Petrovic",
+  "license": "ISC"
+}
