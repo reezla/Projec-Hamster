@@ -27,9 +27,31 @@ router.get( '/random', async (req, res) => {     // get random hamster
 	res.send(randomHamster)
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id' , async (req, res) => {
+	const getHamster = await getOne(req.params.id)
+
+	res.send(getHamster) 
+
+	// how to send status 404 ?????????
 	
-})
+	})
+
+
+
+
+
+
+	/*if ( hamstersId !== 'vtInsZnxFeM6TWT24331') {
+		console.log('pogresan ID');
+		res.sendStatus(404)
+
+	}
+	else {
+		res.send('nesto')
+	}*/
+
+	
+
 
 async function getAll() {
 	const hamstersRef = db.collection(hamsters)  
@@ -48,6 +70,20 @@ async function getAll() {
 	// console.log('Data from database:', array);
 	return array
 }
+
+async function getOne(id) {
+	const docRef = db.collection(hamsters).doc(id)
+	const docSnapshot = await docRef.get()
+	if( docSnapshot.exists ) {
+		return await docSnapshot.data()
+	} else { 
+		
+		
+		return 
+		
+	}	
+}
+
 
 module.exports = router
 
