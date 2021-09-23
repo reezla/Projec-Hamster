@@ -38,3 +38,5 @@ async function getAll() {
 	console.log('Data from database:', array);
 	return array
 }
+
+// GET	/hamsters/:id	  moze da se vidi u lekciji 14/9

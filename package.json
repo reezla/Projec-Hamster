@@ -4,6 +4,7 @@
   "description": "Create an app that shows whitch hamster won more votes for cuteness in 1v1 clashses",
   "main": "index.js",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^9.0.2",
     "firebase-admin": "^9.11.1",
@@ -12,7 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start-server": "node src/server.js"
+    "start-server": "node src/server.js",
+    "test-frontend": "npx http-server ./evaluate/"
   },
   "author": "Boris Petrovic",
   "license": "ISC"
