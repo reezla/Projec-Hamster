@@ -27,31 +27,54 @@ router.get( '/random', async (req, res) => {     // get random hamster
 	res.send(randomHamster)
 })
 
-router.get('/:id' , async (req, res) => {
-	const getHamster = await getOne(req.params.id)
+router.get('/:id' , async  (req, res) => {
+	let id = await getOne(req.params.id) 
+	if ( id ) {
+		res.status(200).send( id )
+	} else {
+	res.sendStatus(404)
+}
+}) 
 
-	res.send(getHamster) 
 
-	// how to send status 404 ?????????
+router.post('/', async (req, res) => {
+	let body = await req.body
+	if( !isHamsterObject(body) ) {
+		res.sendStatus(400)
+		return
+	} 
+	let newId = await postHamster(body)
+	res.status(200).send({id:newId})
+})
+
+async function postHamster(object) {
+	const docRef = await db.collection(hamsters).add(object)
+	return (docRef.id)
+	//const settings = { merge:true } till put koden
+
+}
+
+function isHamsterObject(body) {
 	
-	})
-
-
-
-
-
-
-	/*if ( hamstersId !== 'vtInsZnxFeM6TWT24331') {
-		console.log('pogresan ID');
-		res.sendStatus(404)
-
+	if (typeof body !== "object" ) {
+		console.log(typeof body)
+		return false;
 	}
-	else {
-		res.send('nesto')
-	}*/
-
+	let keys = Object.keys(body);
 	
-
+	if ( !keys.includes( "name" ) 
+	|| !keys.includes( "age" ) 
+	|| !keys.includes( "loves" ) 
+	|| !keys.includes( "defeats" ) 
+	|| !keys.includes( "wins" ) 
+	|| !keys.includes( "imgName" )
+	|| !keys.includes( "favFood" ) 
+	|| !keys.includes( "games" )
+	) {
+        return false
+    } 
+        return true
+}
 
 async function getAll() {
 	const hamstersRef = db.collection(hamsters)  
@@ -75,12 +98,9 @@ async function getOne(id) {
 	const docRef = db.collection(hamsters).doc(id)
 	const docSnapshot = await docRef.get()
 	if( docSnapshot.exists ) {
-		return await docSnapshot.data()
+		return docSnapshot.data()
 	} else { 
-		
-		
-		return 
-		
+		return null
 	}	
 }
 
