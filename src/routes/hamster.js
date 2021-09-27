@@ -47,6 +47,65 @@ router.post('/', async (req, res) => {
 	res.status(200).send({id:newId})
 })
 
+router.put('/:id', async (req, res) => {
+	let body = req.body
+	if (!changedHumster(body)){
+		res.sendStatus(400);
+		return;
+	}
+
+	const newHamsterInfo = await humsterUpdate(req.params.id, body);
+	if(!newHamsterInfo) {
+		res.sendStatus(404);
+		return;
+	} else {
+		res.sendStatus(200)
+	}
+})
+
+
+
+router.delete('/:id', async (req, res) => {
+	let id = await deleteOneHamster(req.params.id)
+	console.log('params: ', req.params.id, id);
+	
+	if ( id ){
+		res.sendStatus(200)
+	} else {
+		
+		res.sendStatus(404)
+	}
+})
+
+
+////////////////////// f //////////////////////
+
+function changedHumster(body) {            // handling PUT object
+	if (typeof body !== "object") {
+		console.log(typeof body);
+		return false
+	}
+
+	let keys = Object.keys(body);
+	if (!keys.includes("wins") || !keys.includes("games")) {
+		return false;
+	}
+
+	return true;
+}
+
+async function humsterUpdate( id, body ) {            // PUT new results
+	const docRef = await db.collection(hamsters).doc(id);
+	const docSnapshot = await docRef.get();
+
+	if (docSnapshot.exists) {
+		const settings = { merge:true};
+		const data = await db.collection(hamsters).doc(id).set(body, settings);
+		return data;
+	}
+	return false
+}
+
 async function postHamster(object) {
 	const docRef = await db.collection(hamsters).add(object)
 	return (docRef.id)
@@ -104,6 +163,17 @@ async function getOne(id) {
 	}	
 }
 
+async function deleteOneHamster(id) {                // remove hamster with Id
+	console.log('Deleting a document...');
+	const docRef = db.collection(hamsters).doc(id)
+	const docSnapshot = await docRef.get()
+	console.log('Document exists? ', docSnapshot.exists);
+	if (docSnapshot.exists) {
+		await docRef.delete()
+		return true
+	} else 
+	return false
+}
 
 module.exports = router
 
