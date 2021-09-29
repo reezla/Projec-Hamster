@@ -10,13 +10,23 @@ const app = express()
 
 app.use( cors() )
 
-router.get('/', async (req, res) => { 
+router.get('/', async (req, res) => { 				// get all hamsters 
     let array = await getAll()
     if ( array == 0 ) {
         res.sendStatus(404)
         console.log('No hamsters left')
     } else {
         res.send(array)
+    }
+})
+
+router.get('/cutest', async(req, res) => {       // get cutest hamster
+    let array = await getCutest()
+	console.log(array)
+    if (array) {
+        res.status(200).send(array)
+    } else {
+        res.sendStatus(404)
     }
 })
 
@@ -27,7 +37,7 @@ router.get( '/random', async (req, res) => {     // get random hamster
 	res.send(randomHamster)
 })
 
-router.get('/:id' , async  (req, res) => {
+router.get('/:id' , async  (req, res) => {		// get hamster w/ specific id
 	let id = await getOne(req.params.id) 
 	if ( id ) {
 		res.status(200).send( id )
@@ -36,8 +46,7 @@ router.get('/:id' , async  (req, res) => {
 }
 }) 
 
-
-router.post('/', async (req, res) => {
+router.post('/', async (req, res) => {			//  
 	let body = await req.body
 	if( !isHamsterObject(body) ) {
 		res.sendStatus(400)
@@ -47,7 +56,7 @@ router.post('/', async (req, res) => {
 	res.status(200).send({id:newId})
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => { 		// put - changes object of specific humster
 	let body = req.body
 	if (!changedHumster(body)){
 		res.sendStatus(400);
@@ -65,7 +74,7 @@ router.put('/:id', async (req, res) => {
 
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => { 		// delete 
 	let id = await deleteOneHamster(req.params.id)
 	console.log('params: ', req.params.id, id);
 	
@@ -80,7 +89,7 @@ router.delete('/:id', async (req, res) => {
 
 ////////////////////// f //////////////////////
 
-function changedHumster(body) {            // handling PUT object
+function changedHumster(body) {            			// handling PUT object
 	if (typeof body !== "object") {
 		console.log(typeof body);
 		return false
@@ -94,7 +103,7 @@ function changedHumster(body) {            // handling PUT object
 	return true;
 }
 
-async function humsterUpdate( id, body ) {            // PUT new results
+async function humsterUpdate( id, body ) {         // PUT new results
 	const docRef = await db.collection(hamsters).doc(id);
 	const docSnapshot = await docRef.get();
 
@@ -109,11 +118,11 @@ async function humsterUpdate( id, body ) {            // PUT new results
 async function postHamster(object) {
 	const docRef = await db.collection(hamsters).add(object)
 	return (docRef.id)
-	//const settings = { merge:true } till put koden
+	//const settings = { merge:true }  --> till put function
 
 }
 
-function isHamsterObject(body) {
+function isHamsterObject(body) {                   // checks if we get array we want
 	
 	if (typeof body !== "object" ) {
 		console.log(typeof body)
@@ -135,9 +144,9 @@ function isHamsterObject(body) {
         return true
 }
 
-async function getAll() {
+async function getAll() {							// get us all 
 	const hamstersRef = db.collection(hamsters)  
-	const hamstersSnapshot = await hamstersRef.get()   // get all documents
+	const hamstersSnapshot = await hamstersRef.get()   
 
 	if( hamstersSnapshot.empty ) {
 		return []
@@ -153,7 +162,7 @@ async function getAll() {
 	return array
 }
 
-async function getOne(id) {
+async function getOne(id) {							// to get a specific id
 	const docRef = db.collection(hamsters).doc(id)
 	const docSnapshot = await docRef.get()
 	if( docSnapshot.exists ) {
@@ -175,9 +184,30 @@ async function deleteOneHamster(id) {                // remove hamster with Id
 	return false
 }
 
+async function getCutest() {							// finds hamster wih highest number of wins
+	const hamstersRef = db.collection(hamsters)
+	const hamstersSnapshot = await hamstersRef.get()
+	if( hamstersSnapshot.empty ) {
+		return false
+	}
+	const array = []
+		hamstersSnapshot.forEach(async docRef => {
+		const data = docRef.data()
+		data.id = docRef.id
+		array.push(data)
+	})
+    
+    array.sort((a, b) => {
+        let aDiff = a.wins-a.defeats
+        let bDiff = b.wins-b.defeats
+        return bDiff - aDiff
+    })
+    
+	let maxScore = array[0].wins-array[0].defeats
+	let allWinners = array.filter(x => x.wins-x.defeats === maxScore)
+
+    return allWinners
+}
+
+
 module.exports = router
-
-
-
-// ubaciti funkciju iz getAllDocuments.js u hamster.js 
-// da bi dobili podatke sa Firebase

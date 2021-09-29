@@ -13,9 +13,7 @@ const PORT = process.env.PORT || 1331
 const cors = require('cors')
 const path = require('path')
 const staticFolder = path.join(__dirname, 'public')
-//app.get('/hamsters', ( req, res ) => {     // ovo imamo u hamsters.js
-  //  res.send(hamsters)
-//})
+
 
 // install middleware
 app.use( cors())

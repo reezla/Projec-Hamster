@@ -7,7 +7,7 @@ const hamsters = 'hamsters'
 updateOne();
 
 async function updateOne(id) {
-    console.log('Update');
+console.log('Update');
     const docId = id || '0xOdLxAtMmzvO2WfxMy9'  // Lelaah
 
     const update = { 
