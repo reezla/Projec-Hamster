@@ -15,7 +15,7 @@
   "scripts": {
     "start-server": "node src/server.js",
     "test-frontend": "npx http-server ./evaluate/",
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "author": "Boris Petrovic",
   "license": "ISC"
