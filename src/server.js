@@ -38,7 +38,3 @@ app.listen(PORT, () => {
     console.log(`Server is listening on PORT ${PORT}`)
 })
 
-app.get('/', (req, res) => {
-    console.log('Web root')
-    res.send('The server is deployed')
-})
