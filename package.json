@@ -13,9 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start-server": "node src/server.js",
-    "test-frontend": "npx http-server ./evaluate/",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test-frontend": "npx http-server ./evaluate/"
   },
   "author": "Boris Petrovic",
   "license": "ISC"
