@@ -11,7 +11,7 @@
     "firestore-export-import": "^0.17.0",
     "typescript": "^4.4.3"
   },
-  "devDependencies": {},
+
   "scripts": {
     "test-frontend": "npx http-server ./evaluate/",
     "start": "node src/server.js"
