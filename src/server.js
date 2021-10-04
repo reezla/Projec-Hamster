@@ -34,7 +34,11 @@ app.use('/', express.static(staticFolder))
 app.use('/hamsters', hamstersRouter)
 
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on PORT ${PORT}`)
-})
+app.listen(PORT, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
 
+app.get('/', (req, res) => {
+    console.log('Web root')
+    res.send('The server is deployed')
+})
