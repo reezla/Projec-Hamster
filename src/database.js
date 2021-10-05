@@ -11,7 +11,7 @@ if( process.env.PRIVATE_KEY) {
 
 function connect() {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(privateKey)
   });
   const db = admin.firestore();
   return db
