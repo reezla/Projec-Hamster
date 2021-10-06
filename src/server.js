@@ -9,7 +9,7 @@ const hamsters = require('./data.json')
 // konfig. server
 
 const app = express()
-const PORT = process.env.PORT || 1331
+const PORT = process.env.PORT || 1337
 const cors = require('cors')
 const path = require('path')
 const staticFolder = path.join(__dirname, 'public')
